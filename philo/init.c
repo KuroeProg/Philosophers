@@ -1,16 +1,61 @@
-#include "philo.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cfiachet <cfiachet@student.42perpignan.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/23 13:11:04 by cfiachet          #+#    #+#             */
+/*   Updated: 2025/02/23 13:12:29 by cfiachet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void	init_value(char **av, t_data *data)
+#include "philo.h"
+/*
+** num_to_eat is a variable who will count how many times a philo will eat
+** it's optionnal, so it don't really have check if it's here or not. We 
+** only have to see
+** if it's a strictly positive number.
+*/
+
+int	init_value(char **av, t_data *data)
 {
 	struct timeval	now;
 
 	gettimeofday(&now, NULL);
-	data->start_time = now;
 	data->num_philo = ft_atol(*av[1]);
 	data->time_to_die = ft_atol(*av[2]);
 	data->time_to_eat = ft_atol(*av[3]);
 	data->time_to_sleep = ft_atol(*av[4]);
+	if (*av[5])
+		data->num_to_eat = ft_atol(*av[5]);
+	else
+		data->num_to_eat = 0;
+	if (data->num_philo < 1 || data->time_to_die < 1 || data->time_to_eat < 1
+		|| data->time_to_sleep < 1)
+		return (0);
+	if (data->num_to_eat < 0)
+		return (0);
+	data->start_time = now;
+	return (1);
+}
 
+int	start_init_philo(t_data *data, t_philo **philo)
+{
+	int	i;
+	int	(*func)(t_data *, t_philo *);
+
+	i = 0;
+	func = &init_philo;
+	philo = malloc(sizeof(t_philo) * data->num_philo);
+	if (!*philo)
+		return (0);
+	while (i < data->num_philo)
+	{
+		if (!init_philo(data, &(*philo)[i]))
+			return (0);
+	}
+	return (1);
 }
 
 int	init_philo(t_data *data, t_philo *philo)
@@ -27,9 +72,39 @@ int	init_philo(t_data *data, t_philo *philo)
 	if (pthread_mutex_init(&philo->meal_mutex, NULL))
 	{
 		write(2, "Mutex initialization failed\n", 29);
-		return (1);
+		return (0);
 	}
 	philo->meals_eaten = 0;
 	philo->is_full = 0;
-	return (0);
+	return (1);
+}
+
+int	init_mutex(t_data *data)
+{
+	int	i;
+
+	data->fork = malloc(sizeof(pthread_mutex_t) * data->num_philo);
+	if (!data->fork)
+		return (0);
+	i = 0;
+	while (i != data->num_philo)
+	{
+		pthread_mutex_init(&data->fork[i], NULL);
+		i++;
+	}
+	return (1);
+}
+
+int	fork_to_philo(t_data *data, t_philo **philo)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->num_philo)
+	{
+		philo[i]->left_fork = &data->fork[i];
+		philo[i]->right_fork = &data->fork[(i + 1) % data->num_philo];
+		i++;
+	}
+	return (1);
 }

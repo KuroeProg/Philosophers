@@ -13,6 +13,7 @@ typedef struct s_data
 	long	time_to_die;
 	long	time_to_eat;
 	long	time_to_sleep;
+	long	num_to_eat;
 }			t_data;
 
 typedef struct s_philo
@@ -31,8 +32,11 @@ typedef struct s_philo
 /*
 ** inits
 */
-void	init_value(char **av, t_data *data);
+int		init_value(char **av, t_data *data);
 int		init_philo(t_data *data, t_philo *philo);
+int		init_mutex(t_data *data);
+int		fork_to_philo(t_data *data, t_philo **philo);
+int		start_init_philo(t_data *data, t_philo **philo);
 
 /*
 ** utils
