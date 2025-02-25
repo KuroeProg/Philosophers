@@ -6,7 +6,7 @@
 /*   By: cfiachet <cfiachet@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:11:04 by cfiachet          #+#    #+#             */
-/*   Updated: 2025/02/24 14:13:22 by cfiachet         ###   ########.fr       */
+/*   Updated: 2025/02/24 14:33:29 by cfiachet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	init_value(char **av, t_data *data)
 	data->time_to_die = ft_atol(av[2]);
 	data->time_to_eat = ft_atol(av[3]);
 	data->time_to_sleep = ft_atol(av[4]);
-	if (*av[5] && *av[5])
+	if (av[5] && *av[5])
 		data->num_to_eat = ft_atol(av[5]);
 	else
 		data->num_to_eat = 0;
@@ -86,14 +86,15 @@ int	init_mutex(t_data *data, t_philo *philo)
 {
 	int	i;
 
+	(void)philo;
 	data->fork = malloc(sizeof(pthread_mutex_t) * data->num_philo);
 	if (!data->fork)
 		return (0);
 	i = 0;
-	while (i != data->num_philo)
+	while (i < data->num_philo)
 	{
-		pthread_mutex_init(&data->fork[i], NULL);
-		pthread_create(&philo[i].thread, NULL, routine, &philo[i]);
+		if (pthread_mutex_init(&data->fork[i], NULL) != 0)
+			return (0);
 		i++;
 	}
 	return (1);
@@ -106,9 +107,16 @@ int	fork_to_philo(t_data *data, t_philo **philo)
 	i = 0;
 	while (i < data->num_philo)
 	{
-		philo[i]->left_fork = &data->fork[i];
-		philo[i]->right_fork = &data->fork[(i + 1) % data->num_philo];
+		(*philo)[i].left_fork = &data->fork[i];
+		(*philo)[i].right_fork = &data->fork[(i + 1) % data->num_philo];
 		i++;
+	}
+	i = 0;
+	while (i < data->num_philo)
+	{
+		if (pthread_create(&(*philo)[i].thread, NULL, routine, &(*philo)[i]))
+			return (0);
+		i++;	
 	}
 	return (1);
 }

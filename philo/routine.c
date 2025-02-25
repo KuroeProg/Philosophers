@@ -10,32 +10,38 @@ void	p_sleep(t_philo *philo)
 void	think(t_philo *philo)
 {
 	printstatut(philo, "is thinking");
-	usleep(500);
 }
-void	*routine(void *arg)
+
+void *routine(void *arg)
 {
-	t_philo *p;
-	
-	p = (t_philo *)arg;
-	if (p->data->simulation == 1)
-		return (NULL);
-	while (1)
-	{
-		take_forks(p);
-		eat(p);
-		put_forks(p);
-		p_sleep(p);
-		think(p);
-		
-		/* Apres que le philosophe ait mange on regarde s'il est repus*/
-		if (p->data->num_to_eat > 0
-			&& p->data->time_to_eat >= p->data->num_to_eat)
-		{
-			pthread_mutex_lock(&p->data->sim_mutex);
-			p->is_full = 1;
-			pthread_mutex_unlock(&p->data->sim_mutex);
-			return (NULL);
-		}
-	}
-	return (NULL);
+    t_philo *p;
+    
+    p = (t_philo *)arg;
+    gettimeofday(&p->last_meal, NULL);
+    
+    if (p->id % 2)
+        usleep(1000);
+    
+    while (!p->data->simulation)
+    {
+        if (!take_forks(p))
+            break;
+        if (!eat(p))
+            break;
+        put_forks(p);
+        
+        pthread_mutex_lock(&p->meal_mutex);
+        if (p->data->num_to_eat > 0 && p->meals_eaten >= p->data->num_to_eat)
+        {
+            pthread_mutex_unlock(&p->meal_mutex);
+            break;
+        }
+        pthread_mutex_unlock(&p->meal_mutex);
+        
+        if (p->data->simulation)
+            break;
+        p_sleep(p);
+        think(p);
+    }
+    return (NULL);
 }

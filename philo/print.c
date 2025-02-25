@@ -12,8 +12,8 @@ void	printstatut(t_philo *philo, const char *str)
         return;
     }
     gettimeofday(&now, NULL);
-    current_time = (now.tv_sec - philo->start_time.tv_sec) * 1000 + 
-                   (now.tv_usec - philo->start_time.tv_usec) / 1000;
-    printf("%ld %d %s\n", current_time, philo->id, str);
+    current_time = (now.tv_sec - philo->data->start_time.tv_sec) * 1000 + 
+                   (now.tv_usec - philo->data->start_time.tv_usec) / 1000;
+    printf("%ldms %d %s\n", current_time, philo->id, str);
     pthread_mutex_unlock(&philo->data->sim_mutex);
 }

@@ -53,9 +53,9 @@ long	get_time_in_ms();
 ** Management
 */
 void	*routine(void *arg);
-void	take_forks(t_philo *philo);
+int		take_forks(t_philo *philo);
 void	put_forks(t_philo *philo);
-void	eat(t_philo *philo);
+int		eat(t_philo *philo);
 int		monitoring(t_data *data, t_philo *philo);
 int		check_death(t_data *data, t_philo *philo);
 

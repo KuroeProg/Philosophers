@@ -6,7 +6,7 @@
 /*   By: cfiachet <cfiachet@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 11:31:05 by cfiachet          #+#    #+#             */
-/*   Updated: 2025/02/24 14:03:32 by cfiachet         ###   ########.fr       */
+/*   Updated: 2025/02/25 10:44:54 by cfiachet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,12 @@ int	main(int ac, char **av)
 		while (i < data.num_philo)
 		{
 			pthread_mutex_destroy(&philo[i].meal_mutex);
+			pthread_mutex_destroy(&data.fork[i]);
 			i++;
 		}
+		free(data.fork);
 		free(philo);
 	}
 	pthread_mutex_destroy(&philo->meal_mutex);
+	return (0);
 }
