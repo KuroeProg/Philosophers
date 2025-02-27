@@ -9,7 +9,8 @@ SRC = main.c \
 	food.c \
 	routine.c \
 	monitoring.c \
-	print.c
+	print.c \
+	parsing.c \
 
 OBJ = $(SRC:.c=.o)
 

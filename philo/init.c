@@ -6,7 +6,7 @@
 /*   By: cfiachet <cfiachet@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:11:04 by cfiachet          #+#    #+#             */
-/*   Updated: 2025/02/24 14:33:29 by cfiachet         ###   ########.fr       */
+/*   Updated: 2025/02/27 17:32:28 by cfiachet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,25 @@ int	init_philo(t_data *data, t_philo *philo)
 	philo->meals_eaten = 0;
 	philo->is_full = 0;
 	return (1);
+}
+
+int	check_meals(t_philo **philo, t_data *data)
+{
+	int i = 0;
+	int count = 0;
+	
+	while (i < data->num_philo)
+	{
+		if (philo[i] == NULL)
+			return(printf("erreur philo null"));
+		if (philo[i]->meals_eaten == data->num_to_eat)
+			count++;
+		i++;
+	if (count == data->num_to_eat || !philo[i]) //check ca
+		return (1);
+	}
+	// else
+		return (0);
 }
 
 int	init_mutex(t_data *data, t_philo *philo)

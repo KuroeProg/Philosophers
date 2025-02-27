@@ -18,7 +18,7 @@ int check_death(t_data *data, t_philo *philo)
         gettimeofday(&current, NULL);
         time_diff = ((current.tv_sec - philo[i].last_meal.tv_sec) * 1000) +
                    ((current.tv_usec - philo[i].last_meal.tv_usec) / 1000);
-        
+
         if (time_diff > data->time_to_die)
         {
             pthread_mutex_lock(&data->sim_mutex);
@@ -48,6 +48,7 @@ int monitoring(t_data *data, t_philo *philo)
     }
     return (1);
 }
+
 // int monitoring(t_data *data, t_philo *philo)
 // {
 //     int i;

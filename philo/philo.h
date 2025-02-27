@@ -48,6 +48,9 @@ int		start_init_philo(t_data *data, t_philo **philo);
 */
 long	ft_atol(char *str);
 long	get_time_in_ms();
+void	parsing(char **av);
+void	return_error();
+int		check_num(char *str);
 
 /*
 ** Management
@@ -58,6 +61,7 @@ void	put_forks(t_philo *philo);
 int		eat(t_philo *philo);
 int		monitoring(t_data *data, t_philo *philo);
 int		check_death(t_data *data, t_philo *philo);
+int		check_meals(t_philo **philo, t_data *data);
 
 /*
 ** display
