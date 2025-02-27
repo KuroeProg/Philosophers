@@ -1,11 +1,11 @@
 #include "philo.h"
 
-void	return_error()
+static void	return_error()
 {
 	printf("error");
 	exit(1);
 }
-int		check_num(char *str)
+static int		check_num(char *str)
 {
 	int	i;
 
